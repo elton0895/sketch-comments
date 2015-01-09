@@ -6,6 +6,9 @@
 action();
 function action() {
 
+	//ensure assets
+	if(!ensureAssets()) return;
+
 	//if a comment is selected, only change that one
 	if(selection && ([selection count] == 1) && (selection[0].name().indexOf('-comment-') > -1)) {
 

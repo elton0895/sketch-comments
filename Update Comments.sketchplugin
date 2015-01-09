@@ -5,6 +5,9 @@
 action();
 function action() {
 
+	//ensure assets
+	if(!ensureAssets()) return;
+
 	//find all comments
 	var comments = getLayersWithNameInDoc('-comment-', false);
 

@@ -1,0 +1,29 @@
+//(ctrl alt cmd /)
+
+#import 'library.js'
+#import 'utils.js'
+
+action();
+function action() {
+
+	//ensure assets
+	if(!ensureAssets()) return;
+
+	//if a comment is selected
+	if(selection && ([selection count] == 1) && (selection[0].name().indexOf('-comment-') > -1)) {
+
+		//get selected comment
+		var comment = selection[0];
+
+		//get point
+		var point = getLayerWithName('point', comment);
+
+		//switch side
+		if(point.frame().x() == 0) {
+			point.frame().setX(point.frame().x() + comment.frame().width() - point.frame().width());
+		}
+		else {
+			point.frame().setX(0);
+		}
+	}
+}

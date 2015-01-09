@@ -6,6 +6,9 @@
 action();
 function action() {
 
+	//ensure assets
+	if(!ensureAssets()) return;
+
 	if(selection && ([selection count] == 1)) {
 			
 		//if a comment is selected, edit it
@@ -25,7 +28,7 @@ function action() {
 			[textLayer setStringValue: text];
 
 			//adjust comment size
-	        adjustCommentSize(comment);
+	        adjustCommentHeight(comment);
 		}
 		else { //add new comment
 

@@ -21,6 +21,21 @@ function sendAction(commandToPerform) {
 	}
 }
 
+//copy layer to clipboard
+function copyLayerToClipboard(layer) {
+
+    //get current page
+    var page = [doc currentPage];
+
+    //add and copy layer to clipboard
+    page.addLayers([layer]);
+    [layer select: true byExpandingSelection: false];
+    sendAction('copy:');
+
+    //remove layer
+    [page removeLayer: layer];
+}
+
 //filter array using predicate
 function predicate(format, array) {
 	
@@ -114,6 +129,13 @@ function getPageWithName(name) {
 	return;
 }
 
+//bring layer to front
+function bringToFront(layer) {
+    var parentGroup = layer.parentGroup();
+    parentGroup.removeLayer(layer);
+    parentGroup.addLayers([layer]);
+}
+
 //get all child layers of layer
 function getChildLayers(layer) {
 	return jsArray([layer layers]);
@@ -176,27 +198,82 @@ function isGroup(layer) {
 	return !![layer isKindOfClass:[MSPage class]];
 }
 
-//get artboard for selection
-function getArtboardForLayer(layer) {
+//add page
+function addPage(name, returnToPrevPage) {
 
-	//return artboard
-	return searchParents(layer, isArtboard);
+    //get current page
+    var currentPage = doc.currentPage();
+
+    //create new page
+    var page = doc.addBlankPage();
+    page.setName(name);
+
+    //make current page active again
+    if(returnToPrevPage) doc.setCurrentPage(currentPage);
+
+    return page;
 }
 
-//search parents recursively
-function searchParents(layer, testFunction) {
+//create rect
+function createRect(parent, name, colour, x, y, w, h) {
 
-	//get parent
-	var parent = [layer parentGroup];
-	if(!parent) return;
+    //create rect
+    var rect = parent.addLayerOfType('rectangle');
+    rect = rect.embedInShapeGroup();
 
-	//test parent
-	if(testFunction(parent)) {
-		return parent;
-	}
-	else {
-		return searchParents(parent, testFunction);
-	}
+    //add fill
+    var fill = rect.style().fills().addNewStylePart();
+    fill.color = MSColor.colorWithSVGString(colour);
+
+    //set frame
+    rect.frame().setWidth(w);
+    rect.frame().setHeight(h);
+    rect.frame().setX(x);
+    rect.frame().setY(y);
+
+    //set name
+    rect.setName(name);
+    rect.setNameIsFixed(true);
+        
+    return rect;
+}
+
+//create group
+function createGroup(parent, name) {
+
+    //create group
+    var group = parent.addLayerOfType('group');
+    group.setName(name);
+
+    return group;
+}
+
+//create text
+function createText(parent, name, color, font, fontSize, string, x, y, w, h, fixed) {
+
+    //create text layer
+    var textLayer = parent.addLayerOfType("text");
+    textLayer.textColor = MSColor.colorWithSVGString(color);
+    textLayer.fontSize = fontSize;
+    textLayer.setFontPostscriptName(font);
+    textLayer.setName(name);
+    textLayer.setNameIsFixed(true);
+    textLayer.setStringValue(string);
+
+    //set fixed
+    if(fixed) {
+        textLayer.setTextBehaviour(1); // BCTextBehaviourFixedWidth
+    }
+
+    //set size
+    textLayer.frame().setWidth(w);
+    resizeLayerToFitText(textLayer);
+
+    //set position
+    textLayer.frame().setX(x);
+    textLayer.frame().setY(y);
+
+    return textLayer;
 }
 
 //copy layer style
