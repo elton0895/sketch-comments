@@ -1,0 +1,43 @@
+//(ctrl alt cmd c)
+
+#import 'library.js'
+#import 'utils.js'
+
+action();
+function action() {
+
+	if(selection && ([selection count] == 1)) {
+			
+		//if a comment is selected, edit it
+		if(selection[0].name().indexOf('-comment-') > -1) {
+
+			//get selected comment
+			var comment = selection[0];
+
+			//get existing text
+			var textLayer = getLayerWithName('text', comment);
+			var existingText = [textLayer stringValue];
+
+			//set up comment
+			var text = createAlert('Edit Comment', existingText);
+			
+			//set new comment text
+			[textLayer setStringValue: text];
+
+			//adjust comment size
+	        adjustCommentSize(comment);
+		}
+		else { //add new comment
+
+			//get selection
+			var selectedLayer = selection[0];
+
+			//set up comment
+			var text = createAlert('Add Comment');
+			var comment = createCommentLayer(text);
+
+			//insert comment
+			insertComment(comment, selectedLayer);
+		}
+	}
+}

@@ -1,0 +1,50 @@
+//(ctrl alt cmd .)
+
+#import 'library.js'
+#import 'utils.js'
+
+action();
+function action() {
+
+	//if a comment is selected, only change that one
+	if(selection && ([selection count] == 1) && (selection[0].name().indexOf('-comment-') > -1)) {
+
+		//get selected comment
+		var comment = selection[0];
+
+		//check if collapsed
+		var bodyLayer = getLayerWithName('body', comment);
+		var collapse = [bodyLayer isVisible];
+
+		//toggle collapse
+		if(collapse) {
+			collapseComment(comment);
+		}
+		else {
+			expandComment(comment);
+		}
+		
+	}
+	else if (!selection || ([selection count] == 0)) {
+
+		//get comments in doc
+		var comments = getLayersWithNameInDoc('-comment-', false);
+
+		//check if collapsed (based on first found comment)
+		var bodyLayer = getLayerWithName('body', comments[0]);
+		var collapse = [bodyLayer isVisible];
+
+		//collapse all comments
+		for(var i = 0; i < comments.length; i++) {
+			var comment = comments[i];
+			
+			//toggle collapse
+			if(collapse) {
+				collapseComment(comment);
+			}
+			else {
+				expandComment(comment);
+			}
+		}
+	}
+}

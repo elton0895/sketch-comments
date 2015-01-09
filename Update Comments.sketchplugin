@@ -1,0 +1,18 @@
+
+#import 'library.js'
+#import 'utils.js'
+
+action();
+function action() {
+
+	//find all comments
+	var comments = getLayersWithNameInDoc('-comment-', false);
+
+	//update comments
+	updateComments(comments);
+}
+
+
+
+
+

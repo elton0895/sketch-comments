@@ -1,0 +1,48 @@
+//(ctrl alt cmd ,)
+
+#import 'library.js'
+#import 'utils.js'
+
+action();
+function action() {
+
+	//if a comment is selected, only change that one
+	if(selection && ([selection count] == 1) && (selection[0].name().indexOf('-comment-') > -1)) {
+
+		//get selected comment
+		var comment = selection[0];
+
+		//check if hidden
+		var hide = [comment isVisible];
+
+		//toggle hide
+		if(hide) {
+			hideComment(comment);
+		}
+		else {
+			showComment(comment);
+		}
+		
+	}
+	else if (!selection || ([selection count] == 0)) {
+
+		//get comments in doc
+		var comments = getLayersWithNameInDoc('-comment-', false);
+
+		//check if collapsed (based on first found comment)
+		var hide = comments[0].isVisible();
+
+		//hide all comments
+		for(var i = 0; i < comments.length; i++) {
+			var comment = comments[i];
+			
+			//toggle hide
+			if(hide) {
+				hideComment(comment);
+			}
+			else {
+				showComment(comment);
+			}
+		}
+	}
+}
