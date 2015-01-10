@@ -59,6 +59,16 @@ function insertComment(comment, selection) {
     comment.frame().setX(comment.frame().x() + comment.frame().width() / 2);
     comment.frame().setY(comment.frame().y() - comment.frame().height() / 2);
 
+    //make sure comment fits horizontally
+    if(container.parentGroup().frame().width() < (comment.frame().x() + comment.frame().width())) {
+        setLeftCommentPosition(comment);
+    }
+
+    //make sure comment fits vertically
+    if(0 > comment.frame().y()) {
+        setBottomCommentPosition(comment);
+    }
+
     //bring comments container to front
     bringToFront(container);
 }
@@ -101,6 +111,128 @@ function getCommentsContainer() {
     }
 }
 
+//switch point side
+function switchPointSide(comment) {
+
+    //get point
+    var point = getLayerWithName('point', comment);
+
+    //switch side
+    if(point.frame().x() == 0) {
+        point.frame().setX(point.frame().x() + comment.frame().width() - point.frame().width());
+    }
+    else {
+        point.frame().setX(0);
+    }
+}
+
+//set top comment position
+function setTopCommentPosition(comment) {
+
+    //get layers
+    var point = getLayerWithName('point', comment);
+    var body = getLayerWithName('body', comment);
+
+    //get rects
+    var pointRect = getRect(point);
+    var bodyRect = getRect(body);
+
+    //set position
+    body.frame().setY(0);
+    point.frame().setY(bodyRect.height + 5);
+    comment.frame().setY(comment.frame().y() - (bodyRect.height + 5));
+}
+
+//set bottom comment position
+function setBottomCommentPosition(comment) {
+
+    //get layers
+    var point = getLayerWithName('point', comment);
+    var body = getLayerWithName('body', comment);
+
+    //get rects
+    var pointRect = getRect(point);
+    var bodyRect = getRect(body);
+
+    //set position
+    point.frame().setY(0);
+    body.frame().setY(pointRect.height + 5);
+    comment.frame().setY(comment.frame().y() + (bodyRect.height + 5));
+}
+
+//set right comment position
+function setRightCommentPosition(comment) {
+
+    //get layers
+    var point = getLayerWithName('point', comment);
+    var body = getLayerWithName('body', comment);
+
+    //get rects
+    var pointRect = getRect(point);
+    var bodyRect = getRect(body);
+
+    //set position
+    point.frame().setX(0);
+    comment.frame().setX(comment.frame().x() + (bodyRect.width - pointRect.width));
+}
+
+//set left comment position
+function setLeftCommentPosition(comment) {
+
+    //get layers
+    var point = getLayerWithName('point', comment);
+    var body = getLayerWithName('body', comment);
+
+    //get rects
+    var pointRect = getRect(point);
+    var bodyRect = getRect(body);
+
+    //set position
+    point.frame().setX(bodyRect.width - pointRect.width);
+    comment.frame().setX(comment.frame().x() - bodyRect.width + pointRect.width);
+}
+
+//switch comment body position
+function switchCommentBodyPosition(comment) {
+
+    //get layers
+    var point = getLayerWithName('point', comment);
+    var body = getLayerWithName('body', comment);
+
+    //get rects
+    var pointRect = getRect(point);
+    var bodyRect = getRect(body);
+
+    //top right
+    if((bodyRect.x == pointRect.x) && (bodyRect.y == 0)) {
+
+
+        //position it bottom right
+        setBottomCommentPosition(comment);
+    }
+
+    //bottom right
+    if((bodyRect.x == pointRect.x) && (bodyRect.y != 0)) {
+
+        //position it bottom left
+        setLeftCommentPosition(comment);
+    }
+
+    //bottom left
+    if((pointRect.x == (bodyRect.width - pointRect.width)) && (bodyRect.y != 0)) {
+
+        //position it top left
+        setTopCommentPosition(comment);
+    }
+
+    //top left
+    if((pointRect.x == (bodyRect.width - pointRect.width)) && (bodyRect.y == 0)) {
+
+        //position it top right
+        setRightCommentPosition(comment);
+    }
+}
+
 //create comment layer
 function createCommentLayer(text) {
 
@@ -137,17 +269,17 @@ function adjustCommentHeight(comment) {
     var text = getLayerWithName('text', body);
 
     //get point position
-    var pointX = comment.frame().x();
-    var pointY = comment.frame().y() + comment.frame().height();
+    var pointX = Math.round(comment.frame().x());
+    var pointY = Math.round(comment.frame().y() + comment.frame().height());
 
     //resize text layer
     resizeLayerToFitText(text);
     
     //get heights
-    var textHeight = text.frame().height();
-    var bgHeight = 20 + textHeight + 20;
-    var pointHeight = point.frame().height();
-    var totalHeight = bgHeight + 5 + pointHeight;
+    var textHeight = Math.round(text.frame().height());
+    var bgHeight = Math.round(20 + textHeight + 20);
+    var pointHeight = Math.round(point.frame().height());
+    var totalHeight = Math.round(bgHeight + 5 + pointHeight);
 
     //set bg height
     bg.frame().setHeight(bgHeight);

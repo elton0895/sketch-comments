@@ -15,15 +15,7 @@ function action() {
 		//get selected comment
 		var comment = selection[0];
 
-		//get point
-		var point = getLayerWithName('point', comment);
-
-		//switch side
-		if(point.frame().x() == 0) {
-			point.frame().setX(point.frame().x() + comment.frame().width() - point.frame().width());
-		}
-		else {
-			point.frame().setX(0);
-		}
+		//switch position of comment body
+		switchCommentBodyPosition(comment);
 	}
 }

@@ -12,6 +12,16 @@ function valueInViewAtIndex (view, index) {
     return view.viewAtIndex(index).stringValue();
 }
 
+//get rect for layer
+function getRect(layer) {
+    return {
+        x: layer.frame().x(),
+        y: layer.frame().y(),
+        width: layer.frame().width(),
+        height: layer.frame().height()
+    };
+}
+
 //send action (e.g. 'copy:', 'pasteHere:')
 function sendAction(commandToPerform) {
 	try {

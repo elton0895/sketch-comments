@@ -1,0 +1,9 @@
+#import 'library.js'
+#import 'utils.js'
+
+action();
+function action() {
+
+	//ensure assets
+	ensureAssets();
+}
