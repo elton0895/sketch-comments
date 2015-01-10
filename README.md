@@ -8,6 +8,8 @@ You can install Sketch Comments in two ways:
 
 **A) Using Sketch Toolbox (plugin manager):**
 
+> It's not yet there, please use the manual method for now.
+
 1. [Download Sketch Toolbox]
 2. Unzip the archive and run Sketch Toolbox
 3. Type "Comments" into the search input or look for it in the list
