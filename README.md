@@ -119,7 +119,7 @@ This allows you to update the style of all comments in the document at once.
 2. Make any changes to the template
 3. Run the "Update" command
 
-![Update Style](instructions/hide.gif?raw=true "Update Style")
+![Update Style](instructions/update.gif?raw=true "Update Style")
 
 > Warning: Please don't change the names of any of the layers in the template.
 
