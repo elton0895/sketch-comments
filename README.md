@@ -101,7 +101,7 @@ This hides the comment completely.
 
 ### Swich comment position `ctrl` + `alt` + `⌘` + `/`
 
-This keeps the tip position still but moved the comment body. Useful when commenting near the edges of an artboard.
+This keeps the tip position still but moves the comment body. Useful when commenting near the edges of an artboard.
 
 1. Select a comment
 2. Keep running the "Switch Position" command until the desired position
