@@ -56,8 +56,8 @@ function insertComment(comment, selection) {
     [comment setName: '-comment- (' + [selection name] + ')'];
 
     //position comment at point
-    comment.frame().setX(comment.frame().x() + comment.frame().width() / 2);
-    comment.frame().setY(comment.frame().y() - comment.frame().height() / 2);
+    comment.frame().setX(Math.round(comment.frame().x() + comment.frame().width() / 2));
+    comment.frame().setY(Math.round(comment.frame().y() - comment.frame().height() / 2));
 
     //make sure comment fits horizontally
     if(container.parentGroup().frame().width() < (comment.frame().x() + comment.frame().width())) {
