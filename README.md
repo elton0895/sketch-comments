@@ -25,7 +25,7 @@ You now have Sketch Comments installed.
 
 The plugin folder should look like this:
 
-![Sketch Comments Folder](instructions/plugins-folder.png?raw=true "Sketch Comments Folder")
+![Sketch Comments Folder](assets/instructions/plugins-folder.png?raw=true "Sketch Comments Folder")
 
 
 
