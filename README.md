@@ -27,6 +27,7 @@ The plugin folder should look like this:
 
 ![Sketch Comments Folder](instructions/plugin-folder.png?raw=true "Sketch Comments Folder")
 
+> This plugin uses some of the new CocoaScript APIs, please make sure you that have at least Sketch 3.0.2 or newer.
 
 
 ## Using the plugin
@@ -35,7 +36,7 @@ You can access Sketch Comments from the menu:
 
 ![Sketch Comments Menu](instructions/plugin-menu.png?raw=true "Sketch Comments Menu")
 
-> Make sure you are using artboards. This plugin will not work otherwise.
+> Make sure that you are using artboards. This plugin will not work otherwise.
 
 
 ### Set up your comment template
