@@ -17,6 +17,13 @@ function action() {
 			//get selected comment
 			var comment = selection[0];
 
+			//get current comment position
+			var commentPosition = getCommentPosition(comment);
+
+			//get point
+			var point = getLayerWithName('point', comment);
+			var pointRect = getRect(point);
+
 			//get existing text
 			var textLayer = getLayerWithName('text', comment);
 			var existingText = [textLayer stringValue];
@@ -28,7 +35,7 @@ function action() {
 			[textLayer setStringValue: text];
 
 			//adjust comment size
-	        adjustCommentHeight(comment);
+	        adjustCommentHeight(comment, commentPosition);
 		}
 		else { //add new comment
 
@@ -44,3 +51,6 @@ function action() {
 		}
 	}
 }
+
+
+    

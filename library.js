@@ -50,7 +50,8 @@ function insertComment(comment, selection) {
 
     //get pasted comment and adjust
     comment = doc.selectedLayers()[0];
-    adjustCommentHeight(comment);
+    var commentPosition = getCommentPosition(comment);
+    adjustCommentHeight(comment, commentPosition);
 
     //rename comment
     [comment setName: '-comment- (' + [selection name] + ')'];
@@ -127,7 +128,7 @@ function switchPointSide(comment) {
 }
 
 //set top comment position
-function setTopCommentPosition(comment) {
+function setTopCommentPosition(comment, keepInPlace) {
 
     //get layers
     var point = getLayerWithName('point', comment);
@@ -140,11 +141,14 @@ function setTopCommentPosition(comment) {
     //set position
     body.frame().setY(0);
     point.frame().setY(bodyRect.height + 5);
-    comment.frame().setY(comment.frame().y() - (bodyRect.height + 5));
+
+    if(!keepInPlace) {
+        comment.frame().setY(comment.frame().y() - (bodyRect.height + 5));
+    }
 }
 
 //set bottom comment position
-function setBottomCommentPosition(comment) {
+function setBottomCommentPosition(comment, keepInPlace) {
 
     //get layers
     var point = getLayerWithName('point', comment);
@@ -157,11 +161,14 @@ function setBottomCommentPosition(comment) {
     //set position
     point.frame().setY(0);
     body.frame().setY(pointRect.height + 5);
-    comment.frame().setY(comment.frame().y() + (bodyRect.height + 5));
+
+    if(!keepInPlace) {
+        comment.frame().setY(comment.frame().y() + (bodyRect.height + 5));
+    }
 }
 
 //set right comment position
-function setRightCommentPosition(comment) {
+function setRightCommentPosition(comment, keepInPlace) {
 
     //get layers
     var point = getLayerWithName('point', comment);
@@ -173,11 +180,14 @@ function setRightCommentPosition(comment) {
 
     //set position
     point.frame().setX(0);
-    comment.frame().setX(comment.frame().x() + (bodyRect.width - pointRect.width));
+
+    if(!keepInPlace) {
+        comment.frame().setX(comment.frame().x() + (bodyRect.width - pointRect.width));
+    }
 }
 
 //set left comment position
-function setLeftCommentPosition(comment) {
+function setLeftCommentPosition(comment, keepInPlace) {
 
     //get layers
     var point = getLayerWithName('point', comment);
@@ -189,7 +199,82 @@ function setLeftCommentPosition(comment) {
 
     //set position
     point.frame().setX(bodyRect.width - pointRect.width);
-    comment.frame().setX(comment.frame().x() - bodyRect.width + pointRect.width);
+
+    if(!keepInPlace) {
+        comment.frame().setX(comment.frame().x() - bodyRect.width + pointRect.width);
+    }
+}
+
+//set comment position
+function setCommentPosition(comment, position) {
+
+    //top left
+    if(position.top && position.left) {
+        setTopCommentPosition(comment, true);
+        setLeftCommentPosition(comment, true);
+    }
+
+    //top right
+    if(position.top && !position.left) {
+        setTopCommentPosition(comment, true);
+        setRightCommentPosition(comment, true);
+    }
+
+    //bottom left
+    if(!position.top && position.left) {
+        setBottomCommentPosition(comment, true);
+        setLeftCommentPosition(comment, true);
+    }
+
+    //bottom right
+    if(!position.top && !position.left) {
+        setBottomCommentPosition(comment, true);
+        setRightCommentPosition(comment, true);
+    }
+}
+
+//get comment position (top left, etc)
+function getCommentPosition(comment) {
+
+    //get layers
+    var point = getLayerWithName('point', comment);
+    var body = getLayerWithName('body', comment);
+
+    //get rects
+    var pointRect = getRect(point);
+    var bodyRect = getRect(body);
+
+    //top right
+    if((bodyRect.x == pointRect.x) && (bodyRect.y == 0)) {
+        return {
+            top: true,
+            left: false 
+        };
+    }
+
+    //bottom right
+    if((bodyRect.x == pointRect.x) && (bodyRect.y != 0)) {
+        return {
+            top: false,
+            left: false 
+        };
+    }
+
+    //bottom left
+    if((pointRect.x == (bodyRect.width - pointRect.width)) && (bodyRect.y != 0)) {
+        return {
+            top: false,
+            left: true 
+        };
+    }
+
+    //top left
+    if((pointRect.x == (bodyRect.width - pointRect.width)) && (bodyRect.y == 0)) {
+        return {
+            top: true,
+            left: true 
+        };
+    }
 }
 
 //switch comment body position
@@ -244,6 +329,7 @@ function createCommentLayer(text) {
 
     //make a copy
     var comment = copyLayer(template);
+    var commentPosition = getCommentPosition(comment);
 
     //find layers
     var bodyLayer = getLayerWithName('body', comment);
@@ -253,14 +339,14 @@ function createCommentLayer(text) {
     [textLayer setStringValue: text];
     
     //adjust comment size
-    adjustCommentHeight(comment);
+    adjustCommentHeight(comment, commentPosition);
 
     //return prepared comment layer
     return comment;
 }
 
 //adjust comment size
-function adjustCommentHeight(comment) {
+function adjustCommentHeight(comment, commentPosition) {
 
     //get layers
     var body = getLayerWithName('body', comment);
@@ -270,7 +356,13 @@ function adjustCommentHeight(comment) {
 
     //get point position
     var pointX = Math.round(comment.frame().x());
-    var pointY = Math.round(comment.frame().y() + comment.frame().height());
+    var pointY; 
+    if(commentPosition.top) {
+        pointY = Math.round(comment.frame().y() + comment.frame().height());
+    }
+    else {
+        pointY = Math.round(comment.frame().y());
+    }
 
     //resize text layer
     resizeLayerToFitText(text);
@@ -287,19 +379,35 @@ function adjustCommentHeight(comment) {
     //set positions
     comment.frame().setX(0);
     comment.frame().setY(0);
-    body.frame().setX(0);
-    body.frame().setY(0);
-    bg.frame().setX(0);
-    bg.frame().setY(0);
-    text.frame().setY(20);
-    point.frame().setY(bgHeight + 5);
+
+    if(commentPosition.top) {
+        body.frame().setX(0);
+        body.frame().setY(0);
+        bg.frame().setX(0);
+        bg.frame().setY(0);
+        text.frame().setY(20);
+        point.frame().setY(bgHeight + 5);
+    }
+    else {
+        body.frame().setX(0);
+        body.frame().setY(pointHeight + 5);
+        bg.frame().setX(0);
+        bg.frame().setY(0);
+        text.frame().setY(20);
+        point.frame().setY(0);
+    }
 
     //resize comment group layer to fit children
     [comment resizeRoot:true];
 
     //set comment position
     comment.frame().setX(pointX);
-    comment.frame().setY(pointY - totalHeight);
+    if(commentPosition.top) {
+        comment.frame().setY(pointY - totalHeight);
+    }
+    else {
+        comment.frame().setY(pointY);
+    }
 }
 
 //update comments
