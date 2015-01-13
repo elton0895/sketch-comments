@@ -428,6 +428,7 @@ function updateComments(comments) {
 	//update all comments
 	for(var i = 0; i < comments.length; i++) {
 		var comment = comments[i];
+        var commentPosition = getCommentPosition(comment);
 
 		//find layers
 		var bodyLayer = getLayerWithName('body', comment);
@@ -458,7 +459,7 @@ function updateComments(comments) {
 		copyLayerStyle(templateTextLayer, textLayer);
 
         //adjust comment size
-        adjustCommentHeight(comment);
+        adjustCommentHeight(comment, commentPosition);
 	}
 }
 
