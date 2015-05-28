@@ -229,7 +229,7 @@ function createRect(parent, name, colour, x, y, w, h) {
 
     //create rect
     var rect = parent.addLayerOfType('rectangle');
-    rect = rect.embedInShapeGroup();
+    // rect = rect.embedInShapeGroup();
 
     //add fill
     var fill = rect.style().fills().addNewStylePart();

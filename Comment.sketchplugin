@@ -1,7 +1,7 @@
 //(ctrl alt cmd c)
 
-#import 'library.js'
-#import 'utils.js'
+@import 'library.js'
+@import 'utils.js'
 
 action();
 function action() {
